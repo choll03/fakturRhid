@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Fpdf;
 
 class HomeController extends Controller
 {
@@ -14,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -25,20 +24,5 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
-    }
-
-    public function tes(Request $req)
-    {
-        $data = $req->json()->all();
-
-    }
-
-    public function cetak() 
-    {
-        Fpdf::AddPage();
-        Fpdf::SetFont('Courier', 'B', 18);
-        Fpdf::Cell(50, 25, 'Hello World!');
-        Fpdf::Output();
-        exit;
     }
 }

@@ -21,11 +21,15 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+    <div>
+    @if(\Route::current()->getName() == "penjualan")
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel" style="position: fixed; z-index: 99">
+    @else
+    <nav class="navbar navbar-expand-md navbar-light navbar-laravel navbar-fixed" style="position: fixed; z-index: 99;width:100%">
+    @endif
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    PT. Asia Perkasa Metal
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -47,22 +51,32 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li> -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/') }}">Buat Faktur</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/items/create') }}">Item</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/faktur') }}">Faktur Jalan</a>
-                            </li>
+                            
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/') }}">Penjualan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/faktur') }}">List Penjualan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/items/create') }}">Barang</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/items/create') }}">Pembelian</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('laporan') }}">Laporan</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ url('laporan') }}" >
+                                        Admin
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -81,7 +95,7 @@
         </nav>
 
         <main class="py-4">
-            <div id="app">
+            <div id="app"  style="margin-top: 50px">
                 @yield('content')
             </div>
         </main>

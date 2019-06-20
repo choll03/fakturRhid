@@ -13,4 +13,8 @@ class Faktur extends Model
     public function detail() {
     	return $this->hasMany('App\Detail');
     }
+
+    public function customer(){
+        return $this->belongsTo('App\Customer', 'customer_id');
+    }
 }

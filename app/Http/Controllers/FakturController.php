@@ -7,6 +7,8 @@ use App\Faktur;
 use App\Detail;
 use App\Item;
 use Fpdf;
+use App\Transformers\FakturTransformer;
+use Indonesia;
 
 class FakturController extends Controller
 {
@@ -21,7 +23,13 @@ class FakturController extends Controller
     }
 
     public function get() {
-        return Faktur::latest()->get();
+
+        $fakturs = Faktur::latest()->get();
+        return fractal()
+        ->collection($fakturs)
+        ->transformWith(new FakturTransformer())
+        ->includeCharacters()
+        ->toArray();
     }
 
     /**
@@ -59,9 +67,8 @@ class FakturController extends Controller
          }
 
          $faktur->no_faktur = $no_faktur;
-         $faktur->alamat = $data['alamat'];
          $faktur->total = $data['total'];
-         $faktur->tujuan = $data['tujuan'];
+         $faktur->customer_id = $data['tujuan'];
          $faktur->tanggal = date("d-m-Y");
 
          $faktur->save();
@@ -152,6 +159,12 @@ class FakturController extends Controller
                     ->leftJoin('items', 'details.item_id', '=', 'items.id')
                     ->get();
 
+        $indonesia  = Indonesia::findVillage($faktur->customer->village_id, ['district.city.province']);
+        $desa       = " Kp. " . $indonesia->name;
+        $kecamatan  = " Kec. " . $indonesia->district->name;
+        $kabupaten  = " Kab. " . $indonesia->district->city->name;
+        $provinsi  = " - " . $indonesia->district->city->province->name;
+
         $bulan = array(
             '01' => 'Januari',
             '02' => 'Februari',
@@ -188,10 +201,10 @@ class FakturController extends Controller
         Fpdf::Cell(190, 2, '','T',1);
         Fpdf::Cell(17, 5, ' Kepada',0,0);
         Fpdf::Cell(3, 5, ':');
-        Fpdf::Cell(170, 5, $faktur->tujuan,0,1);
+        Fpdf::Cell(170, 5, $faktur->customer->nama,0,1);
         Fpdf::Cell(17, 5, ' Alamat',0,0);
         Fpdf::Cell(3, 5, ':');
-        Fpdf::MultiCell(70, 5, $faktur->alamat);
+        Fpdf::MultiCell(70, 5, $faktur->customer->alamat . $desa . $kecamatan . $kabupaten . $provinsi);
         Fpdf::setY(49);
         Fpdf::Cell(190, 23, '','B,L,R',1);
 
@@ -250,7 +263,7 @@ class FakturController extends Controller
 
         Fpdf::Cell(50,7,'( ________________ )','L',0,'C');
         Fpdf::Cell(90,7,'');
-        Fpdf::Cell(50,7,'( Muhammad Farid )','R',1,'C');
+        Fpdf::Cell(50,7,'( ISMAIL )','R',1,'C');
 
         Fpdf::Cell(190,7,'','L,R,B',1);
 

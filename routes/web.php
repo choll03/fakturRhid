@@ -11,8 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('penjualan');
 });
 Route::resource('cart', 'CartController');
 Route::post('/tes', 'HomeController@tes');
@@ -23,6 +25,9 @@ Route::delete('/faktur/delete/{id}', 'FakturController@destroy');
 Route::get('/items/create', 'ItemsController@create');
 Route::put('/items/update/{id}', 'ItemsController@update');
 Route::delete('/items/delete/{id}', 'ItemsController@destroy');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
